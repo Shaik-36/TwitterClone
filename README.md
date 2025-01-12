@@ -1,5 +1,8 @@
 
-# Twitter Clone
+# X (Twitter Clone)
+
+<img width="552" alt="image" src="https://github.com/user-attachments/assets/4fb93e9b-b523-4d1f-a43c-c70077dd6b9e" />
+
 
 A full-stack Twitter clone designed to replicate the core functionalities of the Twitter platform using modern technologies. This application allows users to create and post tweets, follow other users, like, and view their profile and others' profiles. The project is currently under development, with the frontend completed and the backend in progress.
 
@@ -59,7 +62,7 @@ This project aims to build a scalable and performant social media application us
 
 ### Frontend Preview
 
-![Sidebar and Feed Design](./images/sidebar-feed.png)
+<img width="552" alt="image" src="https://github.com/user-attachments/assets/439616bd-5beb-43e9-8c40-d206d149d273" />
 
 
 
@@ -75,7 +78,7 @@ This project aims to build a scalable and performant social media application us
    ```
 2. Navigate to the project directory:
    ```bash
-   cd twitter-clone
+   cd twitter-client
    ```
 3. Install dependencies:
    ```bash
