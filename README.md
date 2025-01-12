@@ -1,5 +1,5 @@
 
-# Twitter Clone
+# X (Twitter Clone)
 
 <img width="552" alt="image" src="https://github.com/user-attachments/assets/4fb93e9b-b523-4d1f-a43c-c70077dd6b9e" />
 
