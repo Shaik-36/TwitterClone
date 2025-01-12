@@ -83,27 +83,27 @@ export default function Home() {
   return (
     <div className="w-screen h-screen grid grid-cols-12 gap-4 lg:px-56 md:px-20 sm:px-8 px-4 relative">
       {/* Sidebar */}
-      <div className="hidden md:block col-span-3">
-        {/* Adjust alignment based on screen size */}
-        <div className="flex flex-col items-start mt-4 pl-4 lg:items-start lg:pl-4"> {/* Left aligned for wide screens */}
+      <div className="hidden md:block col-span-1 md:col-span-2 lg:col-span-3"> {/* Adjust for dynamic sizing */}
+        <div className="flex flex-col items-center mt-4"> {/* Center align items */}
           <FaXTwitter className="text-4xl hover:bg-gray-800 rounded-full p-2 cursor-pointer" />
         </div>
-        <div className={`${font.variable} mt-6 pl-4 lg:pl-4`}> {/* Left aligned for wide screens */}
-          <ul className="flex flex-col items-start space-y-4"> {/* Adjusted to align left */}
+        <div className="mt-6">
+          <ul className="flex flex-col items-center md:items-start space-y-4"> {/* Dynamically align items */}
             {sidebarMenuItems.map((item) => (
               <li
                 className="flex items-center hover:bg-gray-800 rounded-full py-2 px-2 w-fit focus:font-bold"
                 key={item.title}
               >
                 <span className="text-2xl">{item.icon}</span>
-                <span className="hidden xl:block pl-4">{item.title}</span>
+                {/* Show title only when space allows */}
+                <span className="hidden lg:block pl-4">{item.title}</span>
               </li>
             ))}
           </ul>
         </div>
-        <div className="hidden xl:block mt-6 pl-4 lg:pl-4"> {/* Left aligned for wide screens */}
+        <div className="hidden xl:block mt-6">
           <button
-            className={`${font.variable} text-xl bg-white text-black font-bold rounded-full px-16 py-3`}
+            className="text-xl bg-white text-black font-bold rounded-full px-8 py-2"
           >
             Post
           </button>
@@ -111,7 +111,7 @@ export default function Home() {
       </div>
 
       {/* Feed Section */}
-      <div className="col-span-12 md:col-span-6 border-r-[1px] border-l-[1px] border-gray-800">
+      <div className="col-span-12 md:col-span-8 lg:col-span-6 border-r-[1px] border-l-[1px] border-gray-800"> {/* Adjust width */}
         <FeedCard />
         <FeedCard />
         <FeedCard />
@@ -119,7 +119,7 @@ export default function Home() {
       </div>
 
       {/* Right Section */}
-      <div className="hidden md:block col-span-3"></div>
+      <div className="hidden md:block col-span-1 md:col-span-2 lg:col-span-3"></div>
 
       {/* Bottom Navigation Bar for Mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-gray-700 z-50">
@@ -134,4 +134,3 @@ export default function Home() {
     </div>
   );
 }
-
