@@ -78,7 +78,7 @@ This project aims to build a scalable and performant social media application us
    ```
 2. Navigate to the project directory:
    ```bash
-   cd twitter-clone
+   cd twitter-client
    ```
 3. Install dependencies:
    ```bash
