@@ -83,10 +83,16 @@ export default function Home() {
   return (
     <div className="w-screen h-screen grid grid-cols-12 gap-4 lg:px-56 md:px-20 sm:px-8 px-4 relative">
       {/* Sidebar */}
+
+      
       <div className="hidden md:block col-span-1 md:col-span-2 lg:col-span-3"> {/* Adjust for dynamic sizing */}
-        <div className="flex flex-col items-center mt-4"> {/* Center align items */}
-          <FaXTwitter className="text-4xl hover:bg-gray-800 rounded-full p-2 cursor-pointer" />
+
+        {/* Twitter Logo */}
+        <div className="flex items-start mt-4"> {/* Align to the start with sidebar items */}
+          <FaXTwitter className="text-5xl hover:bg-gray-800 rounded-full p-2 cursor-pointer" />
         </div>
+
+        {/* Sidebar Menu */}
         <div className="mt-6">
           <ul className="flex flex-col items-center md:items-start space-y-4"> {/* Dynamically align items */}
             {sidebarMenuItems.map((item) => (
