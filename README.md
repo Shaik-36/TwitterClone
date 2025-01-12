@@ -59,7 +59,8 @@ This project aims to build a scalable and performant social media application us
 
 ### Frontend Preview
 
-![Sidebar and Feed Design](./images/sidebar-feed.png)
+![Sidebar and Feed Design](<img width="552" alt="image" src="https://github.com/user-attachments/assets/6bb6ba1a-1616-46ca-a222-a794d0e096c6" />
+)
 
 
 
