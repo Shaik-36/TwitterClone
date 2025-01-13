@@ -11,8 +11,10 @@ import { FaUserFriends } from "react-icons/fa";
 import { AiOutlineThunderbolt } from "react-icons/ai";
 import { CiUser } from "react-icons/ci";
 import { CiCircleMore } from "react-icons/ci";
-import React from "react";
+import React, { useCallback } from "react";
 import FeedCard from "@/components/FeedCard";
+
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 import { Inter } from "next/font/google";
 
@@ -80,6 +82,11 @@ const sidebarMenuItems : TwitterSidebarButton[] = [
 
 
 export default function Home() {
+
+  const handleLoginWithGoogle = useCallback((cred : CredentialResponse) => {
+    
+  }, []);
+
   return (
     <div className="w-screen h-screen grid grid-cols-12 gap-4 lg:px-56 md:px-20 sm:px-8 px-4 relative">
       {/* Sidebar */}
@@ -125,7 +132,13 @@ export default function Home() {
       </div>
 
       {/* Right Section */}
-      <div className="hidden md:block col-span-1 md:col-span-2 lg:col-span-3"></div>
+      <div className="hidden md:block col-span-1 md:col-span-2 lg:col-span-3">
+
+            <div className="p-5 bg-slate-700 rounded-lg">
+              <h1 className="my-4 text-2xl" >New to X ?</h1>
+              <GoogleLogin onSuccess={(cred) => console.log(cred)}/> 
+            </div>
+      </div>
 
       {/* Bottom Navigation Bar for Mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-black border-t border-gray-700 z-50">
