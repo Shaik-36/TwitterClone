@@ -1,7 +1,7 @@
-const verifyUserGoogleTokenQuery = `#graphql
-  query verifyUserGoogleToken($token: String!) {
-  
-    verifyUserGoogleToken(token: $token) {
-      id
-      email
-`
+import { graphql } from "../../gql";
+
+export const verifyUserGoogleTokenQuery = graphql(`
+  query VerifyUserGoogleToken($token: String!) {
+    verifyGoogleToken(token: $token)
+  }
+`);

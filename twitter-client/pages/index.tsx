@@ -17,6 +17,9 @@ import FeedCard from "@/components/FeedCard";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 import { Inter } from "next/font/google";
+import toast from "react-hot-toast";
+import { graphqlClient } from "@/clients/apis";
+import { verifyUserGoogleTokenQuery } from "../graphql/queries/user";
 
 // Font Type - Twitter
 const font = Inter({
@@ -83,8 +86,25 @@ const sidebarMenuItems : TwitterSidebarButton[] = [
 
 export default function Home() {
 
-  const handleLoginWithGoogle = useCallback((cred : CredentialResponse) => {
+  const handleLoginWithGoogle = useCallback(async (cred : CredentialResponse) => {
     
+    // Get token from response
+    const googleToken = cred.credential
+      
+    // Check if token is valid
+    if(!googleToken) return toast.error("Google Login Failed")
+    
+    // Verify token
+    const verifyGoogleToken = await graphqlClient.request(verifyUserGoogleTokenQuery, { token: googleToken });
+
+    // Notify user
+    toast.success('Vertified Google Token')
+    console.log(verifyGoogleToken)
+
+    // Save token to local storage
+    if(verifyGoogleToken) window.localStorage.setItem('__twitter_token', googleToken)
+
+
   }, []);
 
   return (
@@ -136,7 +156,7 @@ export default function Home() {
 
             <div className="p-5 bg-slate-700 rounded-lg">
               <h1 className="my-4 text-2xl" >New to X ?</h1>
-              <GoogleLogin onSuccess={(cred) => console.log(cred)}/> 
+              <GoogleLogin onSuccess={handleLoginWithGoogle}/> 
             </div>
       </div>
 

@@ -4,6 +4,8 @@ import bodyparser from 'body-parser';
 import { expressMiddleware } from '@apollo/server/express4';
 import { PrismaClient } from "@prisma/client";
 import prisma from "../client/db";
+import cors from 'cors';
+
 
 import { User } from './user';
 
@@ -12,6 +14,7 @@ async function initServer() {
     const app = express();
 
     app.use(bodyparser.json());
+    app.use(cors());
 
 
     const graphqlServer = new ApolloServer({
