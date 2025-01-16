@@ -4,92 +4,93 @@ import JWTService from '../../services/jwt';
 import { GraphqlContext } from '../../interfaces';
 
 interface GoogleTokenResult {
-  iss?: string;               // Issuer of the token
-  nbf?: string;               // Not before (optional time constraint)
-  aud?: string;               // Audience the token is intended for
-  sub?: string;               // Subject (unique identifier for the user)
-  email: string;              // User's email address
-  email_verified: string;     // Whether the email is verified
-  azp?: string;               // Authorized party
-  name?: string;              // Full name of the user
-  picture?: string;           // URL to the user's profile picture
-  given_name: string;         // User's first name
-  family_name?: string;       // User's last name (optional)
-  iat?: string;               // Issued at time
-  exp?: string;               // Expiration time
-  jti?: string;               // Token ID (unique identifier for the token)
-  alg?: string;               // Algorithm used to sign the token
-  kid?: string;               // Key ID used in the signature
-  typ?: string;               // Type of the token (optional)
+  iss?: string;
+  nbf?: string;
+  aud?: string;
+  sub?: string;
+  email: string;
+  email_verified: string;
+  azp?: string;
+  name?: string;
+  picture?: string;
+  given_name: string;
+  family_name?: string;
+  iat?: string;
+  exp?: string;
+  jti?: string;
+  alg?: string;
+  kid?: string;
+  typ?: string;
 }
 
-
 const queries = {
-
-
+  // Verify Google Token and create/find user
   verifyGoogleToken: async (parent: any, { token }: { token: string }) => {
-    const googleToken = token;
     const googleOauthURL = new URL('https://www.googleapis.com/oauth2/v3/tokeninfo');
-    googleOauthURL.searchParams.append('id_token', googleToken);
-    const { data } = await axios.get<GoogleTokenResult>(googleOauthURL.toString(), {
-      responseType: 'json',
-    });
+    googleOauthURL.searchParams.append('id_token', token);
 
-    // Check if the user exists in the database
-    const CheckForUser = await prisma.user.findUnique({
-      where: {
-        email: data.email,
-      },
-    });
+    let data: GoogleTokenResult;
 
-    // If the user does not exist, create a new user
-    if (!CheckForUser) {
-      await prisma.user.create({
-        data: {
-          email: data.email,
-          firstName: data.given_name,
-          lastname: data.family_name, 
-          profileImageURL: data.picture,
-        },
+    try {
+      const response = await axios.get<GoogleTokenResult>(googleOauthURL.toString(), {
+        responseType: 'json',
       });
+      data = response.data;
+    } catch (error) {
+      console.error("Google OAuth verification failed:", error);
+      throw new Error("Invalid Google token.");
     }
 
-    // Then generate a JWT token for the user
-    // This token will be used to authenticate the user in future requests
-    // This token will be stored in the client's browser
-    // The client will send this token in the Authorization header of future requests
-    // The server will then verify the token and authenticate the user
-    // The client will then be able to access protected resources
-    
-    const userInDb = await prisma.user.findUnique({ where: { email: data.email } });
+    // Validate email and email verification
+    if (!data.email || data.email_verified !== "true") {
+      throw new Error("Invalid or unverified email address.");
+    }
 
-    if(!userInDb) throw new Error('User not found.');
+    // Check if user exists or create a new one
+    const user = await prisma.user.upsert({
+      where: { email: data.email },
+      update: {}, // No update needed
+      create: {
+        email: data.email,
+        firstName: data.given_name,
+        lastname: data.family_name ?? '', // Handle optional last name
+        profileImageURL: data.picture ?? '', // Handle optional picture
+      },
+    });
 
-    const userToken = JWTService.generateTokenForUser(userInDb);
+    console.log("User found or created:", user.email);
+
+    // Generate a JWT for the user
+    const userToken = await JWTService.generateTokenForUser(user); // Await the promise
+
+
     return userToken;
-
   },
 
+  // Get the current logged-in user
   getCurrentUser: async (parent: any, args: any, ctx: GraphqlContext) => {
-
     const id = ctx.user?.id;
-    if(!id) return null;
-    
-    const user = await prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-    }); 
 
-    return user; 
-  },  
+    if (!id) {
+      console.warn("No user ID found in context.");
+      return null;
+    }
 
-
-
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id },
+      });
+      if (!user) {
+        console.warn(`User with ID ${id} not found.`);
+        return null;
+      }
+      console.log("Fetched current user:", user.email);
+      return user;
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      throw new Error("Failed to retrieve user.");
+    }
+  },
 };
 
-
-
-
-  
-export const resolvers = { queries };   
+export const resolvers = { queries };

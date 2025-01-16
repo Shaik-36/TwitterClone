@@ -1,12 +1,11 @@
- 
-import JWT from 'jsonwebtoken';
-import { User } from '@prisma/client';
-import { JWTUser } from '../interfaces';
-import dotenv from 'dotenv';
+import JWT from "jsonwebtoken";
+import { User } from "@prisma/client";
+import { JWTUser } from "../interfaces";
+import dotenv from "dotenv";
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config(); // Load environment variables
 
-const JWT_SECRET = process.env.JWT_SECRET || ""; // Get JWT secret from environment variables
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
 if (!JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined in the environment variables.");
@@ -24,16 +23,21 @@ class JWTService {
       email: user.email,
     };
 
-    return JWT.sign(payload, JWT_SECRET); // No expiration time
+    return JWT.sign(payload, JWT_SECRET, { algorithm: "HS256" }); // Specify algorithm
   }
 
   // Decode and verify a JWT
-  public static decodeToken(token: string): JWTUser | null {
+  public static decodeToken(token: string | null): JWTUser | null {
+    if (!token) {
+      console.warn("No token provided for decoding.");
+      return null; // Return null if the token is null
+    }
+
     try {
-      return JWT.verify(token, JWT_SECRET) as JWTUser;
+      return JWT.verify(token, JWT_SECRET, { algorithms: ["HS256"] }) as JWTUser;
     } catch (error) {
       console.error("JWT verification failed:", error);
-      return null; // Return null for invalid tokens
+      return null; // Return null for invalid or expired tokens
     }
   }
 }

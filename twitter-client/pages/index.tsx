@@ -99,7 +99,7 @@ export default function Home() {
 
     // Notify user
     toast.success('Vertified Google Token')
-    console.log(verifyGoogleToken)
+
 
     // Save token to local storage
     if(verifyGoogleToken) window.localStorage.setItem('__twitter_token', googleToken)
